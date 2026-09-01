@@ -2,6 +2,8 @@ import { ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useLogout } from '../../hooks/useAuth'
 import { useAuthStore } from '../../store/auth.store'
+import { CategoryNav } from './CategoryNav'
+import { SearchBar } from './SearchBar'
 
 export function Header() {
   const user = useAuthStore((s) => s.user)
@@ -38,15 +40,15 @@ export function Header() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-4">
-        <ShoppingBag className="h-7 w-7 text-primary-500" strokeWidth={2.5} />
-        <span className="text-2xl font-extrabold tracking-tight text-primary-600">
-          BAZAAR
-        </span>
-        <span className="ml-2 hidden text-sm text-gray-500 sm:inline">
-          Pakistan&apos;s Online Marketplace
-        </span>
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4">
+        <Link to="/" className="flex shrink-0 items-center gap-2">
+          <ShoppingBag className="h-7 w-7 text-primary-500" strokeWidth={2.5} />
+          <span className="text-2xl font-extrabold tracking-tight text-primary-600">BAZAAR</span>
+        </Link>
+        <SearchBar />
       </div>
+
+      <CategoryNav />
     </header>
   )
 }

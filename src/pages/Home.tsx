@@ -1,13 +1,19 @@
+import { CategoryGrid } from '../components/home/CategoryGrid'
+import { HeroCarousel } from '../components/home/HeroCarousel'
+import { HomeSection } from '../components/home/HomeSection'
+import { PromoBanners } from '../components/home/PromoBanners'
+
 export default function Home() {
   return (
-    <section className="mx-auto flex max-w-7xl flex-1 flex-col items-center justify-center px-4 py-24 text-center">
-      <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-        Big Savings Week is coming soon
-      </h1>
-      <p className="mt-3 max-w-md text-gray-500">
-        BAZAAR is under construction. Categories, deals, and the full shopping
-        experience launch in the next build phase.
-      </p>
-    </section>
+    <>
+      <HeroCarousel />
+      <CategoryGrid title="Categories" />
+      <HomeSection title="Flash Sale" query={{ minDiscount: 20, sort: 'newest', limit: 10 }} />
+      <HomeSection title="Just For You" query={{ sort: 'newest', limit: 10 }} />
+      <PromoBanners />
+      <HomeSection title="Popular Products" query={{ sort: 'popular', limit: 10 }} />
+      <HomeSection title="Recommended Products" query={{ sort: 'rating', limit: 10 }} />
+      <CategoryGrid title="Popular Categories" sortByPopularity limit={6} />
+    </>
   )
 }
