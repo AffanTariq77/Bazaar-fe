@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 const Home = lazy(() => import('../pages/Home'))
+const Login = lazy(() => import('../pages/auth/Login'))
+const Register = lazy(() => import('../pages/auth/Register'))
 
 export function AppRoutes() {
   return (
@@ -14,6 +16,8 @@ export function AppRoutes() {
     >
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Suspense>
   )
