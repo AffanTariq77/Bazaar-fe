@@ -2,11 +2,12 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { productsApi } from '../services/api/products.api'
 import type { ProductQuery } from '../types/product'
 
-export function useProducts(query: ProductQuery) {
+export function useProducts(query: ProductQuery, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['products', query],
     queryFn: () => productsApi.list(query),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled,
   })
 }
 
