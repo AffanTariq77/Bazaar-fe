@@ -31,6 +31,11 @@ export function Header() {
                   Seller Dashboard
                 </Link>
               )}
+              {user.role === 'ADMIN' && (
+                <Link to="/admin" className="font-medium text-primary-600 hover:underline">
+                  Admin Dashboard
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={() => logout.mutate()}

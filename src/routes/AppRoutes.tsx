@@ -18,6 +18,13 @@ const SellerProducts = lazy(() => import('../pages/seller/SellerProducts'))
 const SellerProductCreate = lazy(() => import('../pages/seller/SellerProductCreate'))
 const SellerProductEdit = lazy(() => import('../pages/seller/SellerProductEdit'))
 const SellerOrders = lazy(() => import('../pages/seller/SellerOrders'))
+const AdminLayout = lazy(() => import('../pages/admin/AdminLayout'))
+const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'))
+const AdminUsers = lazy(() => import('../pages/admin/AdminUsers'))
+const AdminSellers = lazy(() => import('../pages/admin/AdminSellers'))
+const AdminProducts = lazy(() => import('../pages/admin/AdminProducts'))
+const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'))
+const AdminCategories = lazy(() => import('../pages/admin/AdminCategories'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 
 export function AppRoutes() {
@@ -49,6 +56,16 @@ export function AppRoutes() {
             <Route path="products/create" element={<SellerProductCreate />} />
             <Route path="products/:id/edit" element={<SellerProductEdit />} />
             <Route path="orders" element={<SellerOrders />} />
+          </Route>
+        </Route>
+        <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="sellers" element={<AdminSellers />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="categories" element={<AdminCategories />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

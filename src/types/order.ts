@@ -44,6 +44,8 @@ export interface Order {
   items: OrderItem[]
   payment: Payment
   createdAt: string
+  /** Only populated on seller/admin order-list responses, not the customer's own /orders. */
+  user?: { name: string; email: string }
 }
 
 export interface CreateOrderPayload {
