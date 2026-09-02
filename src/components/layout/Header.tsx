@@ -23,6 +23,9 @@ export function Header() {
           {user ? (
             <>
               <span className="text-gray-700">Hi, {user.name}</span>
+              <Link to="/orders" className="font-medium text-primary-600 hover:underline">
+                My Orders
+              </Link>
               <button
                 type="button"
                 onClick={() => logout.mutate()}
