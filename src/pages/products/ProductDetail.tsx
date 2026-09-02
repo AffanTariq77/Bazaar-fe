@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ImageGallery } from '../../components/products/ImageGallery'
 import { ProductGrid } from '../../components/products/ProductGrid'
+import { ReviewList } from '../../components/products/ReviewList'
 import { useAddToCart } from '../../hooks/useCart'
 import { useProduct, useProducts } from '../../hooks/useProducts'
 import { useToggleWishlist, useWishlist } from '../../hooks/useWishlist'
@@ -179,6 +180,11 @@ export default function ProductDetail() {
             </dl>
           </div>
         </div>
+      </div>
+
+      <div className="mt-12 border-t border-gray-100 pt-8">
+        <h2 className="mb-4 text-xl font-bold text-gray-900">Reviews</h2>
+        <ReviewList productId={product.id} />
       </div>
 
       {relatedItems.length > 0 && (
