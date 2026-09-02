@@ -1,5 +1,9 @@
-import { Star, Truck } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Heart, ShoppingCart, Star, Truck } from 'lucide-react'
+import type { MouseEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAddToCart } from '../../hooks/useCart'
+import { useToggleWishlist, useWishlist } from '../../hooks/useWishlist'
+import { useAuthStore } from '../../store/auth.store'
 import { salePrice, type Product } from '../../types/product'
 
 function formatPkr(amount: number) {
@@ -7,8 +11,25 @@ function formatPkr(amount: number) {
 }
 
 export function ProductCard({ product }: { product: Product }) {
+  const navigate = useNavigate()
   const image = product.images[0]?.url
   const discounted = salePrice(product)
+  const accessToken = useAuthStore((s) => s.accessToken)
+  const { data: wishlist } = useWishlist()
+  const toggleWishlist = useToggleWishlist()
+  const addToCart = useAddToCart()
+  const inWishlist = !!wishlist?.some((p) => p.id === product.id)
+  const outOfStock = (product.inventory?.stockQuantity ?? 1) === 0
+
+  const guardedAction = (e: MouseEvent, action: () => void) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!accessToken) {
+      navigate('/login')
+      return
+    }
+    action()
+  }
 
   return (
     <Link
@@ -29,6 +50,14 @@ export function ProductCard({ product }: { product: Product }) {
             -{product.discount}%
           </span>
         )}
+        <button
+          type="button"
+          aria-label="Toggle wishlist"
+          onClick={(e) => guardedAction(e, () => toggleWishlist.mutate(product.id))}
+          className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow"
+        >
+          <Heart className={`h-4 w-4 ${inWishlist ? 'fill-primary-500 text-primary-500' : 'text-gray-500'}`} />
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-3">
@@ -54,7 +83,17 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         )}
 
-        <p className="mt-auto pt-1 text-xs text-gray-400">{product.seller.storeName}</p>
+        <p className="text-xs text-gray-400">{product.seller.storeName}</p>
+
+        <button
+          type="button"
+          disabled={outOfStock || addToCart.isPending}
+          onClick={(e) => guardedAction(e, () => addToCart.mutate({ productId: product.id, quantity: 1 }))}
+          className="mt-auto flex items-center justify-center gap-1.5 rounded-md border border-primary-500 py-1.5 text-xs font-semibold text-primary-600 transition hover:bg-primary-50 disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+        >
+          <ShoppingCart className="h-3.5 w-3.5" />
+          {outOfStock ? 'Out of Stock' : 'Add to Cart'}
+        </button>
       </div>
     </Link>
   )

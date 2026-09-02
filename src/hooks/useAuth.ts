@@ -1,16 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { toast } from 'sonner'
 import { authApi, type LoginPayload, type RegisterPayload } from '../services/api/auth.api'
 import { useAuthStore } from '../store/auth.store'
-
-function errorMessage(err: unknown, fallback: string) {
-  if (axios.isAxiosError(err)) {
-    const message = err.response?.data?.message
-    if (typeof message === 'string') return message
-  }
-  return fallback
-}
+import { errorMessage } from '../utils/errorMessage'
 
 export function useCurrentUser() {
   const accessToken = useAuthStore((s) => s.accessToken)
