@@ -80,6 +80,12 @@ export default function OrderDetail() {
             <span>Subtotal</span>
             <span>{formatPkr(order.subtotal)}</span>
           </div>
+          {Number(order.discount) > 0 && (
+            <div className="flex justify-between text-emerald-600">
+              <span>Discount</span>
+              <span>-{formatPkr(order.discount)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-gray-600">
             <span>Shipping</span>
             <span>{Number(order.shippingFee) === 0 ? 'Free' : formatPkr(order.shippingFee)}</span>

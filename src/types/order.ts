@@ -52,4 +52,5 @@ export interface CreateOrderPayload {
   addressId: string
   deliveryMethod: DeliveryMethod
   paymentMethod: PaymentMethod
+  couponCode?: string
 }

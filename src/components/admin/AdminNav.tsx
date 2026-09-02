@@ -7,6 +7,7 @@ const LINKS = [
   { to: '/admin/products', label: 'Products', end: false },
   { to: '/admin/orders', label: 'Orders', end: false },
   { to: '/admin/categories', label: 'Categories', end: false },
+  { to: '/admin/coupons', label: 'Coupons', end: false },
 ]
 
 export function AdminNav() {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { AddressForm } from '../../components/checkout/AddressForm'
 import { useAddresses } from '../../hooks/useAddresses'
 import { useCart } from '../../hooks/useCart'
+import { useValidateCoupon } from '../../hooks/useCoupons'
 import { useCreateOrder } from '../../hooks/useOrders'
 import type { DeliveryMethod, PaymentMethod } from '../../types/order'
 
@@ -30,12 +31,15 @@ export default function Checkout() {
   const { data: cart, isLoading: cartLoading } = useCart()
   const { data: addresses, isLoading: addressesLoading } = useAddresses()
   const createOrder = useCreateOrder()
+  const validateCoupon = useValidateCoupon()
 
   const [step, setStep] = useState(0)
   const [showNewAddress, setShowNewAddress] = useState(false)
   const [addressId, setAddressId] = useState<string | null>(null)
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('STANDARD')
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('COD')
+  const [couponInput, setCouponInput] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
 
   if (cartLoading || addressesLoading) {
     return <div className="mx-auto max-w-7xl px-4 py-16 text-center text-gray-400">Loading…</div>
@@ -59,13 +63,21 @@ export default function Checkout() {
   const freeShipping = cart.items.every((item) => item.product.freeShipping)
   const deliveryFee = DELIVERY_OPTIONS.find((d) => d.value === deliveryMethod)?.fee ?? 0
   const shippingFee = freeShipping ? 0 : deliveryFee
-  const total = cart.subtotal + shippingFee
+  const discount = appliedCoupon?.discount ?? 0
+  const total = cart.subtotal - discount + shippingFee
   const selectedAddress = addresses?.find((a) => a.id === addressId)
+
+  const handleApplyCoupon = () => {
+    if (!couponInput.trim()) return
+    validateCoupon.mutate(couponInput.trim(), {
+      onSuccess: (result) => setAppliedCoupon({ code: result.code, discount: result.discount }),
+    })
+  }
 
   const handlePlaceOrder = () => {
     if (!addressId) return
     createOrder.mutate(
-      { addressId, deliveryMethod, paymentMethod },
+      { addressId, deliveryMethod, paymentMethod, couponCode: appliedCoupon?.code },
       { onSuccess: (order) => navigate(`/orders/${order.id}`) },
     )
   }
@@ -211,11 +223,55 @@ export default function Checkout() {
               <h3 className="mb-1 font-semibold text-gray-900">Payment</h3>
               <p className="text-gray-600">{PAYMENT_OPTIONS.find((p) => p.value === paymentMethod)?.label}</p>
             </div>
+            <div>
+              <h3 className="mb-1 font-semibold text-gray-900">Coupon</h3>
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                  <span>
+                    <strong>{appliedCoupon.code}</strong> applied — {formatPkr(appliedCoupon.discount)} off
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAppliedCoupon(null)
+                      setCouponInput('')
+                    }}
+                    className="font-medium text-emerald-700 hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value)}
+                    placeholder="Enter coupon code"
+                    className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm uppercase focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={validateCoupon.isPending}
+                    className="rounded-md border border-primary-500 px-4 py-2 text-sm font-semibold text-primary-600 hover:bg-primary-50 disabled:opacity-50"
+                  >
+                    {validateCoupon.isPending ? 'Checking…' : 'Apply'}
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="border-t border-gray-100 pt-3">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
                 <span>{formatPkr(cart.subtotal)}</span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-600">
+                  <span>Discount</span>
+                  <span>-{formatPkr(discount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
                 <span>{shippingFee === 0 ? 'Free' : formatPkr(shippingFee)}</span>

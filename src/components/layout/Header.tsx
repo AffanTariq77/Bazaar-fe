@@ -5,6 +5,7 @@ import { useLogout } from '../../hooks/useAuth'
 import { useWishlist } from '../../hooks/useWishlist'
 import { useAuthStore } from '../../store/auth.store'
 import { CategoryNav } from './CategoryNav'
+import { NotificationBell } from './NotificationBell'
 import { SearchBar } from './SearchBar'
 
 export function Header() {
@@ -65,6 +66,7 @@ export function Header() {
         <SearchBar />
 
         <div className="flex shrink-0 items-center gap-4">
+          {user && <NotificationBell />}
           <Link to="/wishlist" className="relative flex flex-col items-center text-gray-600 hover:text-primary-600">
             <Heart className="h-6 w-6" />
             {!!wishlist?.length && (
