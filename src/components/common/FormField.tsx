@@ -1,15 +1,21 @@
-import type { InputHTMLAttributes } from 'react'
+import { useId, type InputHTMLAttributes } from 'react'
 
 interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   error?: { message?: string }
 }
 
-export function FormField({ label, error, ...inputProps }: FormFieldProps) {
+export function FormField({ label, error, id, ...inputProps }: FormFieldProps) {
+  const generatedId = useId()
+  const inputId = id ?? inputProps.name ?? generatedId
+
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
+      <label htmlFor={inputId} className="mb-1 block text-sm font-medium text-gray-700">
+        {label}
+      </label>
       <input
+        id={inputId}
         {...inputProps}
         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       />
