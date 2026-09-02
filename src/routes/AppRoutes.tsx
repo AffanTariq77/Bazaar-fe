@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './ProtectedRoute'
 
 const Home = lazy(() => import('../pages/Home'))
@@ -26,6 +26,10 @@ const AdminProducts = lazy(() => import('../pages/admin/AdminProducts'))
 const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'))
 const AdminCategories = lazy(() => import('../pages/admin/AdminCategories'))
 const AdminCoupons = lazy(() => import('../pages/admin/AdminCoupons'))
+const AccountLayout = lazy(() => import('../pages/account/AccountLayout'))
+const AccountProfile = lazy(() => import('../pages/account/AccountProfile'))
+const AccountAddresses = lazy(() => import('../pages/account/AccountAddresses'))
+const AccountReviews = lazy(() => import('../pages/account/AccountReviews'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 
 export function AppRoutes() {
@@ -49,6 +53,12 @@ export function AppRoutes() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/account" element={<AccountLayout />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<AccountProfile />} />
+            <Route path="addresses" element={<AccountAddresses />} />
+            <Route path="reviews" element={<AccountReviews />} />
+          </Route>
         </Route>
         <Route element={<ProtectedRoute roles={['SELLER']} />}>
           <Route path="/seller" element={<SellerLayout />}>

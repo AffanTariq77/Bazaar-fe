@@ -27,3 +27,15 @@ export function useCreateAddress() {
     onError: (err) => toast.error(errorMessage(err, 'Could not save address')),
   })
 }
+
+export function useDeleteAddress() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => addressesApi.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ADDRESSES_KEY })
+      toast.success('Address removed')
+    },
+    onError: (err) => toast.error(errorMessage(err, 'Could not remove address')),
+  })
+}

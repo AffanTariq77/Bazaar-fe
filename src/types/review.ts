@@ -24,3 +24,13 @@ export interface CreateReviewPayload {
   title: string
   comment: string
 }
+
+export interface MyReview {
+  id: string
+  rating: number
+  title: string
+  comment: string
+  verifiedPurchase: boolean
+  createdAt: string
+  product: { id: string; name: string; slug: string; images: { id: string; url: string }[] }
+}

@@ -12,12 +12,17 @@ export function useReviews(productId: string) {
   })
 }
 
+export function useMyReviews() {
+  return useQuery({ queryKey: ['reviews', 'mine'], queryFn: reviewsApi.mine })
+}
+
 export function useCreateReview(productId: string) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (payload: CreateReviewPayload) => reviewsApi.create(productId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] })
+      queryClient.invalidateQueries({ queryKey: ['reviews', 'mine'] })
       queryClient.invalidateQueries({ queryKey: ['products', 'detail'] })
       toast.success('Review submitted')
     },

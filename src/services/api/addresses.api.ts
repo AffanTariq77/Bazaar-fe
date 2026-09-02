@@ -10,4 +10,7 @@ export const addressesApi = {
     const res = await apiClient.post<ApiResponse<Address>>('/addresses', payload)
     return res.data.data
   },
+  async remove(id: string) {
+    await apiClient.delete(`/addresses/${id}`)
+  },
 }

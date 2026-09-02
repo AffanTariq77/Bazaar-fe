@@ -24,6 +24,9 @@ export function Header() {
           {user ? (
             <>
               <span className="text-gray-700">Hi, {user.name}</span>
+              <Link to="/account" className="font-medium text-primary-600 hover:underline">
+                My Account
+              </Link>
               <Link to="/orders" className="font-medium text-primary-600 hover:underline">
                 My Orders
               </Link>

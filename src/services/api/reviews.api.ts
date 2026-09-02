@@ -1,4 +1,4 @@
-import type { CreateReviewPayload, Review, ReviewsResult } from '../../types/review'
+import type { CreateReviewPayload, MyReview, Review, ReviewsResult } from '../../types/review'
 import { apiClient, type ApiResponse } from './client'
 
 export const reviewsApi = {
@@ -8,6 +8,10 @@ export const reviewsApi = {
   },
   async create(productId: string, payload: CreateReviewPayload) {
     const res = await apiClient.post<ApiResponse<Review>>(`/products/${productId}/reviews`, payload)
+    return res.data.data
+  },
+  async mine() {
+    const res = await apiClient.get<ApiResponse<MyReview[]>>('/reviews/mine')
     return res.data.data
   },
 }
