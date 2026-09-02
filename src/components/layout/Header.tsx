@@ -26,6 +26,11 @@ export function Header() {
               <Link to="/orders" className="font-medium text-primary-600 hover:underline">
                 My Orders
               </Link>
+              {user.role === 'SELLER' && (
+                <Link to="/seller" className="font-medium text-primary-600 hover:underline">
+                  Seller Dashboard
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={() => logout.mutate()}

@@ -12,6 +12,12 @@ const Wishlist = lazy(() => import('../pages/wishlist/Wishlist'))
 const Checkout = lazy(() => import('../pages/checkout/Checkout'))
 const Orders = lazy(() => import('../pages/orders/Orders'))
 const OrderDetail = lazy(() => import('../pages/orders/OrderDetail'))
+const SellerLayout = lazy(() => import('../pages/seller/SellerLayout'))
+const SellerDashboard = lazy(() => import('../pages/seller/SellerDashboard'))
+const SellerProducts = lazy(() => import('../pages/seller/SellerProducts'))
+const SellerProductCreate = lazy(() => import('../pages/seller/SellerProductCreate'))
+const SellerProductEdit = lazy(() => import('../pages/seller/SellerProductEdit'))
+const SellerOrders = lazy(() => import('../pages/seller/SellerOrders'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 
 export function AppRoutes() {
@@ -35,6 +41,15 @@ export function AppRoutes() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
+        </Route>
+        <Route element={<ProtectedRoute roles={['SELLER']} />}>
+          <Route path="/seller" element={<SellerLayout />}>
+            <Route index element={<SellerDashboard />} />
+            <Route path="products" element={<SellerProducts />} />
+            <Route path="products/create" element={<SellerProductCreate />} />
+            <Route path="products/:id/edit" element={<SellerProductEdit />} />
+            <Route path="orders" element={<SellerOrders />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
